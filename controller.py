@@ -1,4 +1,3 @@
-from turtle import update
 from manage_database import Database
 
 db = Database()
