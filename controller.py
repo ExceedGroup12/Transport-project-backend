@@ -33,7 +33,3 @@ class ControlRobot():
             return {
                 "status": "continue"
             }
-            
-            
-c = ControlRobot()
-print(c.update_location())
