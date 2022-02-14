@@ -10,7 +10,6 @@ class ControlRobot():
         f_location = route["f_location"]
         t_location = route["t_location"]
         db.update_route(t_location, f_location)
-        self.update_location()
     
     def is_end(self, current, end):
         return current == end
