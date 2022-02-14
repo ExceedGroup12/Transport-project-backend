@@ -5,6 +5,8 @@ client = MongoClient('mongodb://localhost', 37017)
 db = client["transport"]
 menu_collection = db["route"]
 
+track_collection = db["track"]
+
 class Database:
     
     def update_route(self, f_location, t_location):
@@ -15,10 +17,12 @@ class Database:
         
     def get_route(self):
         res = menu_collection.find_one({}, {"_id":0, "current":0})
-        print(res)
+        return res
         
-    def get_current(self):
+    def get_current(self)->int:
         res = menu_collection.find_one({}, {"_id":0, "f_location":0, "t_location":0})
-
-u = Database()
-u.get_route()
+        return res["current"]
+    
+    def get_track_size(self):
+        res = track_collection.find({})
+        return len(list(res))
