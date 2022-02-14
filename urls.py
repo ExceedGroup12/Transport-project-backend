@@ -13,3 +13,7 @@ def check_status():
 def go_back():
     c.return_to_start()
     return c.update_location()
+
+@app.post("/reset")
+def reset():
+    return c.reset_robot()

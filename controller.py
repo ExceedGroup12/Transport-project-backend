@@ -4,6 +4,13 @@ db = Database()
 
 class ControlRobot():
     
+    def reset_robot(self):
+        db.update_location(0)
+        db.update_route(0, 0)
+        return {
+            "status":"done"
+        }
+    
     def return_to_start(self):
         route = db.get_route()
         f_location = route["f_location"]
