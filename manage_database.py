@@ -2,8 +2,8 @@ from pymongo import MongoClient
 client = MongoClient('mongodb://localhost', 37017)
 
 # route database
-db = client["transport"]
-menu_collection = db["route"]
+db = client["Application1_database_mount"]
+menu_collection = db["robot_status"]
 
 track_collection = db["track"]
 
@@ -15,14 +15,32 @@ class Database:
     def update_location(self, current):
         menu_collection.update_one({},{"$set":{"current":current}})
         
+    def update_collected_status(self, status):
+        menu_collection.update_one({},{"$set":{"collected_package":status}})
+    
+    def update_moving_status(self, status):
+        menu_collection.update_one({},{"$set":{"moving":status}})
+        
     def get_route(self):
         res = menu_collection.find_one({}, {"_id":0, "current":0})
         return res
+    
+    def get_direction(self):
+        res = menu_collection.find_one({}, {"_id":0, "direction":1})
+        return res["direction"]
+    
+    def get_status(self):
+        res = menu_collection.find_one({}, {"_id":0,"moving": 1, "collected_package": 1})
+        return res
         
     def get_current(self)->int:
-        res = menu_collection.find_one({}, {"_id":0, "f_location":0, "t_location":0})
+        res = menu_collection.find_one({}, {"_id":0, "current":1})
         return res["current"]
     
     def get_track_size(self):
         res = track_collection.find({})
-        return len(list(res))
+        return 7
+        # return len(list(res))
+        
+# d = Database()
+# print(d.get_status()["moving"])
