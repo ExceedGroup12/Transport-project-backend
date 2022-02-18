@@ -37,6 +37,7 @@ class ControlRobot():
     def get_status(self):
         moving = db.get_status()["moving"]
         if not moving:
+            print("--------------------")
             res = self.calculate_move()
             if res["move"] != 0:
                 db.update_moving_status(True)
@@ -54,7 +55,9 @@ class ControlRobot():
             diff = t_location - current + track_size
         else:
             diff = t_location - current
-        if diff <= track_size//2:
+        print("=========================")
+        print(diff)
+        if diff < track_size//2:
             move = diff
             direction = 0
         else:

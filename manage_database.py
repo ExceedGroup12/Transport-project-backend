@@ -1,9 +1,9 @@
 from pymongo import MongoClient
-client = MongoClient('mongodb://localhost', 37017)
+client = MongoClient('mongodb://localhost', 27017)
 
 # route database
-db = client["Application1_database_mount"]
-menu_collection = db["robot_status"]
+db = client["robot"]
+menu_collection = db["myrobot"]
 
 track_collection = db["track"]
 
@@ -38,9 +38,9 @@ class Database:
         return res["current"]
     
     def get_track_size(self):
-        res = track_collection.find({})
-        return 7
+        # res = track_collection.find({})
+        return 4
         # return len(list(res))
         
 # d = Database()
-# print(d.get_status()["moving"])
+# print(d.get_route())
