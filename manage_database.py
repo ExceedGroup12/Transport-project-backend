@@ -42,5 +42,10 @@ class Database:
         return 4
         # return len(list(res))
         
-# d = Database()
-# print(d.get_route())
+    def get_station_detail(self, station_id):
+        res = track_collection.find_one({"station_id":station_id}, {"_id":0})
+        print(res)
+        return res
+        
+d = Database()
+d.get_station_detail(2)

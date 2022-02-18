@@ -1,8 +1,19 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from controller import ControlRobot
+from control_page import ControlPage
 
 app = FastAPI()
 c = ControlRobot()
+p = ControlPage()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/get-status")
@@ -21,3 +32,11 @@ def reach():
 @app.post("/reset")
 def reset():
     return c.reset_robot()
+
+@app.get("/get-station/{id}")
+def get_station_detail(id):
+    return p.station_detail(int(id))
+
+@app.get("/get-robot-status")
+def get_robot_status_for_frontend():
+    return p.get_robot_status()
