@@ -25,10 +25,6 @@ class Database:
         res = menu_collection.find_one({}, {"_id":0, "current":0})
         return res
     
-    def get_direction(self):
-        res = menu_collection.find_one({}, {"_id":0, "direction":1})
-        return res["direction"]
-    
     def get_status(self):
         res = menu_collection.find_one({}, {"_id":0,"moving": 1, "collected_package": 1})
         return res
@@ -44,7 +40,6 @@ class Database:
         
     def get_station_detail(self, station_id):
         res = track_collection.find_one({"station_id":station_id}, {"_id":0})
-        print(res)
         return res
         
 d = Database()

@@ -17,19 +17,18 @@ class ControlRobot():
         f_location = route["f_location"]
         t_location = route["t_location"]
         db.update_route(t_location, f_location)
-        return self.calculate_station(db.get_current(), f_location, db.get_direction())
+        return self.calculate_station(db.get_current(), f_location)
     
     def calculate_move(self):
         route = db.get_route()
         status = db.get_status()
         current = db.get_current()
-        direction = db.get_direction()
         if not status["collected_package"]:
             f_location = route["f_location"]
-            return self.calculate_station(current, f_location, direction)
+            return self.calculate_station(current, f_location)
         else:
             t_location = route["t_location"]
-            return self.calculate_station(current, t_location, direction)
+            return self.calculate_station(current, t_location)
         
     def reached(self):
         db.update_moving_status(False)
@@ -37,40 +36,53 @@ class ControlRobot():
     def get_status(self):
         moving = db.get_status()["moving"]
         if not moving:
-            print("--------------------")
             res = self.calculate_move()
             if res["move"] != 0:
                 db.update_moving_status(True)
             return res
 
     
-    def calculate_station(self, current, t_location, direction):
+    def calculate_station(self, current, t_location):
         track_size = db.get_track_size()
         if current == t_location:
             return {
                 "move":0,
-                "direction":direction
             }
-        if current > t_location:
-            diff = t_location - current + track_size
-        else:
-            diff = t_location - current
-        print("=========================")
-        print(diff)
-        if diff < track_size//2:
-            move = diff
-            direction = 0
-        else:
-            move = track_size - diff
-            direction = 1
-        c_move = move
-        if direction == 1:
-            c_move *= -1
-        location = db.get_current() + c_move
-        if location < 0:
-            location += track_size
-        db.update_location(location)
+        move = t_location - current
+        if move < 0:
+            move += track_size
+        db.update_location(t_location)
         return {
             "move":move,
-            "direction":direction
         }
+
+    # def calculate_station(self, current, t_location, direction):
+    #     track_size = db.get_track_size()
+    #     if current == t_location:
+    #         return {
+    #             "move":0,
+    #             "direction":direction
+    #         }
+    #     if current > t_location:
+    #         diff = t_location - current + track_size
+    #     else:
+    #         diff = t_location - current
+    #     print("=========================")
+    #     print(diff)
+    #     if diff < track_size//2:
+    #         move = diff
+    #         direction = 0
+    #     else:
+    #         move = track_size - diff
+    #         direction = 1
+    #     c_move = move
+    #     if direction == 1:
+    #         c_move *= -1
+    #     location = db.get_current() + c_move
+    #     if location < 0:
+    #         location += track_size
+    #     db.update_location(location)
+    #     return {
+    #         "move":move,
+    #         "direction":direction
+    #     }
