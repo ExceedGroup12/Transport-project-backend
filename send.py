@@ -15,6 +15,6 @@ class ss(BaseModel):
 
 @app.post("/update/location")
 def update_val(ms : ss):
-    my_query = {"_id": "620f618c8ae69a135949b291" }
+    my_query = {}
     new_query = {"$set": {"f_location":  ms.ff,"t_location": ms.gg,"moving":False , "collected_package":False }}
     collection.update_one(my_query,new_query)
