@@ -5,7 +5,7 @@ db = Database()
 class ControlRobot():
     
     def reset_robot(self):
-        res = self.calculate_station(db.get_current(), 1, 0)
+        res = self.calculate_station(db.get_current(), 1)
         db.update_location(1)
         db.update_route(1, 1)
         db.update_collected_status(False)
@@ -55,34 +55,3 @@ class ControlRobot():
         return {
             "move":move,
         }
-
-    # def calculate_station(self, current, t_location, direction):
-    #     track_size = db.get_track_size()
-    #     if current == t_location:
-    #         return {
-    #             "move":0,
-    #             "direction":direction
-    #         }
-    #     if current > t_location:
-    #         diff = t_location - current + track_size
-    #     else:
-    #         diff = t_location - current
-    #     print("=========================")
-    #     print(diff)
-    #     if diff < track_size//2:
-    #         move = diff
-    #         direction = 0
-    #     else:
-    #         move = track_size - diff
-    #         direction = 1
-    #     c_move = move
-    #     if direction == 1:
-    #         c_move *= -1
-    #     location = db.get_current() + c_move
-    #     if location < 0:
-    #         location += track_size
-    #     db.update_location(location)
-    #     return {
-    #         "move":move,
-    #         "direction":direction
-    #     }

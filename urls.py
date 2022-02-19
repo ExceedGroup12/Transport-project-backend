@@ -4,7 +4,7 @@ from controller import ControlRobot
 from control_page import ControlPage
 from auth import LoginModel, UserOut, login, get_current_user
 from fastapi import Depends
-from send import update_val
+from send import update_val, ss
 
 app = FastAPI()
 c = ControlRobot()
@@ -18,16 +18,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("update/location")
-def up_date():
-    return update_val()
+@app.post("/update/location")
+def up_date(ms:ss, current_user: UserOut = Depends(get_current_user)):
+    return update_val(ms)
 
 @app.get("/get-status")
 def check_status():
     return c.get_status()
 
 @app.post("/back-to-start")
-def go_back():
+def go_back(current_user: UserOut = Depends(get_current_user)):
     c.return_to_start()
     return c.return_to_start()
 
@@ -36,7 +36,7 @@ def reach():
     c.reached()
 
 @app.post("/reset")
-def reset():
+def reset(current_user: UserOut = Depends(get_current_user)):
     return c.reset_robot()
 
 @app.get("/get-station/{id}")
