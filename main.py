@@ -46,6 +46,13 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 app = FastAPI()
 
+def get_user_from_db() :
+    result = collection.find({},{"_id":0})
+    #print(result)
+    dic = {}
+    for r in result:
+        dic[ r['username'] ] = r
+    return dic
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -80,7 +87,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -89,6 +96,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
+        print(username)
         if username is None:
             raise credentials_exception
         token_data = TokenData(username=username)
@@ -105,14 +113,6 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
-
-def get_user_from_db() :
-    result = collection.find({},{"_id":0})
-    #print(result)
-    dic = {}
-    for r in result:
-        dic[ r['username'] ] = r
-    return dic
 
 class state(BaseModel):
     ff: str
@@ -152,17 +152,20 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
-
-@app.get("/station/", response_model=User)
-async def read_users_me(current_user: User = Depends(get_current_user)):
-    result = robots.find_one({"robotid": "1"})
-    ans = result['station']
-    return { "station": User.username }
+class fg(BaseModel):
+    ff: int
+    gg: int
+'''
+@app.post("/station/")
+def read_users_me(current_user: User = Depends(get_current_user) , a : fg  ):
+    result = robots.find_one({"_id": "620f618c8ae69a135949b291"})
+    ans = result['t_location']
+    return { ans }'''
 
 @app.get("/users/me/", response_model=User)
-async def read_users_me(current_user: User = Depends(get_current_active_user)):
+def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user
 
 @app.get("/users/me/items/")
-async def read_own_items(current_user: User = Depends(get_current_user)):
+def read_own_items(current_user: User = Depends(get_current_user)):
     return [{"item_id": "Foo", "owner": current_user.username}]
