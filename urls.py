@@ -4,6 +4,7 @@ from controller import ControlRobot
 from control_page import ControlPage
 from auth import LoginModel, UserOut, login, get_current_user
 from fastapi import Depends
+from send import update_val
 
 app = FastAPI()
 c = ControlRobot()
@@ -16,6 +17,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.post("update/location")
+def up_date():
+    return update_val()
 
 @app.get("/get-status")
 def check_status():
