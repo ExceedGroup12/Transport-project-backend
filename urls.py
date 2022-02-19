@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from controller import ControlRobot
 from control_page import ControlPage
+from auth import LoginModel, UserOut, login, get_current_user
+from fastapi import Depends
 from send import update_val
 
 app = FastAPI()
@@ -15,6 +17,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 @app.post("update/location")
 def up_date():
     return update_val()
@@ -43,3 +46,11 @@ def get_station_detail(id):
 @app.get("/get-robot-status")
 def get_robot_status_for_frontend():
     return p.get_robot_status()
+
+@app.get("/token")
+async def get_token(request: LoginModel):
+    return login(request)
+
+@app.get("/users/me/", response_model=UserOut)
+def read_users_me(current_user: UserOut = Depends(get_current_user)):
+    return current_user
