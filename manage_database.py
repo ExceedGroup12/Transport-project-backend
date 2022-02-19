@@ -4,6 +4,7 @@ client = MongoClient('mongodb://localhost', 27017)
 # route database
 db = client["robot"]
 menu_collection = db["myrobot"]
+user = db["user"]
 
 track_collection = db["track"]
 
@@ -41,6 +42,13 @@ class Database:
     def get_station_detail(self, station_id):
         res = track_collection.find_one({"station_id":station_id}, {"_id":0})
         return res
-        
-d = Database()
-d.get_station_detail(2)
+    
+class UserDB:
+    
+    def get_user_detail(self, username):
+        res = user.find_one({"username":username}, {"_id":0 ,"hashed_password":0})
+        return res
+    
+    def get_hashed_password(self, username):
+        res = user.find_one({"username":username}, {"_id":0 ,"hashed_password":1})
+        return res["hashed_password"]
