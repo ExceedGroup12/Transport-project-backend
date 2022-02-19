@@ -103,8 +103,3 @@ def login(request: LoginModel):
     response = JSONResponse(content=content)
     response.set_cookie("transport-token", create_access_token(data={"sub": user["username"]}))
     return response
-
-
-@app.get("/users/me/", response_model=UserOut)
-def read_users_me(current_user: UserOut = Depends(get_current_user)):
-    return current_user

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from controller import ControlRobot
 from control_page import ControlPage
-from auth import LoginModel, UserOut, login, read_users_me, get_current_user
+from auth import LoginModel, UserOut, login, get_current_user
 from fastapi import Depends
 
 app = FastAPI()
