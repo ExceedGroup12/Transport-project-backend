@@ -22,6 +22,7 @@ app = FastAPI()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+
 class LoginModel(BaseModel):
     username: str
     password: str
@@ -33,12 +34,14 @@ class User(BaseModel):
     email: Optional[str] = None
     hashed_password: str
     disabled: Optional[bool] = None
-    
+
+
 class UserOut(BaseModel):
     username: str
     full_name: Optional[str] = None
     email: Optional[str] = None
     disabled: Optional[bool] = None
+
 
 class Token(BaseModel):
     access_token: str
@@ -48,11 +51,14 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     username: Optional[str] = None
 
+
 def get_user(username: str):
     return db.get_user_detail(username)
-    
+
+
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
+
 
 def create_access_token(data: dict):
     to_encode = data.copy()
@@ -60,6 +66,7 @@ def create_access_token(data: dict):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
@@ -80,6 +87,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         raise credentials_exception
     return user
 
+
 def authenticate_user(username: str, password: str):
     user = get_user(username)
     h_pass = db.get_hashed_password(username)
@@ -99,7 +107,9 @@ def login(request: LoginModel):
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    content = {"status":"ok"}
+    content = {"status": "ok"}
     response = JSONResponse(content=content)
-    response.set_cookie("transport-token", create_access_token(data={"sub": user["username"]}))
-    return response
+    response.set_cookie("transport-token", create_access_token(data={"sub": user["username"]}) )
+    return {
+        "token": create_access_token(data={"sub": user["username"]})
+    }

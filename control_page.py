@@ -33,6 +33,10 @@ class ControlPage:
             return {
                 "message": f"Reach drop package location (station {t_location})"
             }
+        if moving == False and t_location == current:
+            return {
+                "message": f"Reach the destination location (station {t_location})"
+            }
         else:
             return {
                 "message": f"waiting for command"
