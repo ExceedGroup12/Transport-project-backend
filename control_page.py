@@ -29,10 +29,6 @@ class ControlPage:
             return {
                 "message": f"moving to drop package location (station {t_location})" 
             }
-        if collected_package == True and moving == False:
-            return {
-                "message": f"Reach drop package location (station {t_location})"
-            }
         if moving == False and t_location == current:
             return {
                 "message": f"Reach the destination location (station {t_location})"
